@@ -1,0 +1,58 @@
+package edu.umass.cs.sensors.mhllibrary.MHLClient;
+
+
+import edu.umass.cs.sensors.mhllibrary.MHLShepherd.MHLMonitor;
+import edu.umass.cs.sensors.mhllibrary.MHLShepherd.MHLShepherd;
+
+/**
+ * Created by erisinger on 1/7/19.
+ */
+public class ConnectivityMonitor extends MHLMonitor {
+    MHLClient.CONNECTION_STATUS connectionStatus;
+
+    public ConnectivityMonitor(MHLShepherd shepherd, MHLClient.CONNECTION_STATUS connectionStatus) {
+        super(shepherd);
+        this.monitorType = "MHLClient connectivityMonitor";
+        this.connectionStatus = connectionStatus;
+    }
+
+    @Override
+    public MHLMonitor.STATUS getStatus() {
+        if (connectionStatus == MHLClient.CONNECTION_STATUS.CONNECTED ||
+                connectionStatus == MHLClient.CONNECTION_STATUS.NOT_CONNECTED) {
+            return MHLMonitor.STATUS.NORMAL;
+
+        } else if (connectionStatus == MHLClient.CONNECTION_STATUS.RETRYING) {
+            return MHLMonitor.STATUS.WARNING;
+
+        } else if (connectionStatus == MHLClient.CONNECTION_STATUS.CONNECTION_FAILED_NO_RETRIES) {
+            return MHLMonitor.STATUS.ERROR;
+
+        } else {
+            return MHLMonitor.STATUS.UNKNOWN;
+        }
+    }
+
+    @Override
+    public String getStatusMessage() {
+        if (connectionStatus == MHLClient.CONNECTION_STATUS.CONNECTED) {
+            return "Connected";
+        } else if (connectionStatus == MHLClient.CONNECTION_STATUS.NOT_CONNECTED) {
+            return "Not connected";
+
+        } else if (connectionStatus == MHLClient.CONNECTION_STATUS.RETRYING) {
+            return "Connection lost: retrying";
+
+        } else if (connectionStatus == MHLClient.CONNECTION_STATUS.CONNECTION_FAILED_NO_RETRIES) {
+            return "Connection lost: unrecoverable";
+
+        } else {
+            return "Connection state unknown";
+        }
+    }
+
+    public void setStatus(MHLClient.CONNECTION_STATUS status) {
+        this.connectionStatus = status;
+        shepherd.notifyStatusChange(this);
+    }
+}

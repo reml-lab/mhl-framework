@@ -1,0 +1,5 @@
+<resources>
+    <string name="lib_name">mhl-Library</string>
+    <string name="mhl_library_debug">false</string>
+    <string name="allow_all_hostnames">true</string>
+</resources>

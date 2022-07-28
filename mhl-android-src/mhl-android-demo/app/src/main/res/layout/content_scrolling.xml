@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="edu.umass.cs.sensors.mhldemo.View.DemoActivity"
+    tools:showIn="@layout/activity_scrolling">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/textTestLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="0sp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="8dp"
+            android:text="Settings"
+            android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <EditText
+            android:id="@+id/serverEditText"
+            android:layout_width="match_parent"
+            android:layout_weight=".25"
+            android:layout_height="wrap_content"
+            android:hint="Server address"
+            android:inputType="text"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:background="@drawable/border"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"/>
+
+        <EditText
+            android:id="@+id/portEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Port"
+            android:layout_weight=".75"
+            android:inputType="text"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:background="@drawable/border"
+            android:layout_marginBottom="8dp"/>
+
+    </LinearLayout>
+
+        <EditText
+            android:id="@+id/researchTokenEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Research token"
+            android:inputType="text"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:background="@drawable/border"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:textSize="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start Streaming"
+            android:textAllCaps="false"
+            android:layout_margin="8dp"
+            android:background="@drawable/round_button"
+            android:textColor="@color/white"
+            android:onClick="startStreaming" />
+
+        <Button
+            android:textSize="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Stop Streaming"
+            android:textAllCaps="false"
+            android:layout_margin="8dp"
+            android:background="@drawable/round_button"
+            android:textColor="@color/white"
+            android:onClick="stopStreaming"/>
+
+        <TextView
+            android:id="@+id/textStatusLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="0sp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="30dp"
+            android:text="Status"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textStatus"
+            android:layout_width="match_parent"
+            android:padding="4sp"
+            android:layout_margin="8dp"
+            android:text=""
+            android:textSize="20sp"
+            android:background="@drawable/border"
+            android:layout_height="80sp"
+            android:gravity="center_horizontal"/>
+
+
+
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

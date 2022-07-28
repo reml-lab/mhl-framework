@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="COARSE_LOCATION">001</integer>
+    <integer name="FINE_LOCATION">002</integer>
+    <integer name="BACKGROUND_LOCATION">003</integer>
+    <integer name="BACKGROUND_PROCESSES">004</integer>
+    <integer name="BLUETOOTH">005</integer>
+    <integer name="BLUETOOTH_ADMIN">006</integer>
+</resources>
