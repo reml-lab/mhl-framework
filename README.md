@@ -42,11 +42,11 @@ Basic usage instructions for streaming and inspecting data are provided below. A
 
 ### 3.1 Using Kibana
 
-Kibana can be accessed from the web portal or directly at <server_ip>:9803. If you are viewing this page from a machine running the server, you can access it using this link: https://localhost:9803. Users who are familiar with Kibana can set an index pattern and use the provided data discovery and dashboarding tools to inspect the data stored in elastic search.
+Kibana can be accessed from the web portal or directly at <server_ip>:9803. If you are viewing this page from a machine running the server, you can access it using this link: http://localhost:9803. Users who are familiar with Kibana can set an index pattern and use the provided data discovery and dashboarding tools to inspect the data stored in elastic search.
 
 A base configuration file is also provided at this link: https://raw.githubusercontent.com/reml-lab/mhl-framework/main/mhl-server/mhl-services/kibana/export.ndjson. The file can also be found in the cloned repo in mhl-server/mhl-services/kibana/export.ndjson. To load the configuration, follow these steps:
 
-1. Open the Kibana Saved Objects page by going to <server_ip>:9801/app/management/kibana/objects. If you are viewing this page from a machine running the server, you can access it using this link: https://localhost:9803/app/management/kibana/objects.
+1. Open the Kibana Saved Objects page by going to <server_ip>:9801/app/management/kibana/objects. If you are viewing this page from a machine running the server, you can access it using this link: http://localhost:9803/app/management/kibana/objects.
 2. Click the Import link at the top right of the page.
 3. Drag and drop a copy of the export.ndjson file onto the file import area.
 4. Click the Import button.
