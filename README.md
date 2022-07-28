@@ -40,7 +40,13 @@ Basic usage instructions for streaming and inspecting data are provided below. A
 
 ## 3. Usage Instructions
 
-### 3.1 Using Kibana
+### 3.2 Using the Participant Managment Portal
+
+The participant managment portal includes functionality for managing participant records. The existing structure includes several field types. The basic data model includes a participant facing research token and an internal identifier (the Badge ID). All stired streaming data records are associated with the Badge ID. 
+
+The portal allows for editing participant records, deleting participant records, adding new participant records, and viewing currently streaming data for each participant.
+
+### 3.2 Using Kibana
 
 [Kibana](https://www.elastic.co/kibana/) can be accessed from the web portal or directly at http://<server_ip>:9803. If you are viewing this page from a machine running the server, you can access it using this link: http://localhost:9803. Users who are familiar with Kibana can set an index pattern and use the provided data discovery and dashboarding tools to inspect the data stored in elastic search.
 
@@ -53,7 +59,7 @@ A base configuration file is also provided at this link: https://raw.githubuserc
 
 Once these step are compelte, you will have access to a basic dashboard for displaying data streamed from the reference Android application and index patterns enabling the use of Kibana data discovery features.
 
-## Using Jupyter
+## 3.3 Using Jupyter
 
 The Jupyter server provides a notebook interface for interacting with ElasticSearch and Kafka data using Python. An example notebook is included in ElasticSearch.ipynb that queries the ElasticSearch data store for collected data streamed from the reference Android app. The included Python ElasticSearch library is https://elasticsearch-py.readthedocs.io/en/v7.13.1/. The included Python Kafka library is https://kafka-python.readthedocs.io/en/2.0.1/. 
 
