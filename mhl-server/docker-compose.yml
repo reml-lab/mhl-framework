@@ -1,0 +1,138 @@
+version: "3.5"
+services:
+  mhl-kafka-zookeeper:
+    hostname: mhl-zookeeper
+    container_name: mhl-zookeeper
+    build: 
+      context: ./mhl-services/kafka-zookeeper
+      dockerfile: Dockerfile
+    expose:
+        - "2181"
+
+  mhl-kafka-broker0:
+    hostname: mhl-broker0
+    container_name: mhl-broker0
+    build: 
+      context: ./mhl-services/kafka-broker
+      dockerfile: Dockerfile
+    depends_on:
+      - "mhl-kafka-zookeeper"
+    expose:
+      - "9092"
+
+  mhl-ingest:
+    hostname: mhl-ingest
+    container_name: mhl-ingest
+    build: 
+      context: ./mhl-services/ingest
+      dockerfile: Dockerfile
+    depends_on:
+      - "mhl-kafka-zookeeper"
+      - "mhl-kafka-broker0"
+      - "mhl-web"
+    ports:
+      - "9400:9596"
+    secrets: 
+      - mhl_ingest_keyStorePassword
+      - mhl_ingest_serverkeys
+    volumes:
+      - mhl-user-manager-data:/user_manager_data
+
+  mhl-web:
+    hostname: mhl-web
+    container_name: mhl-web
+    build: 
+      context: ./mhl-services/web
+      dockerfile: Dockerfile
+    ports:
+      - "9801:8000"
+    volumes:
+      - mhl-user-manager-data:/data
+
+  mhl-vs:
+    hostname: mhl-vs
+    container_name: mhl-vs
+    build: 
+      context: ./mhl-services/vs
+      dockerfile: Dockerfile
+    depends_on:
+      - "mhl-kafka-zookeeper"
+      - "mhl-kafka-broker0"
+      - "mhl-web"
+    ports:
+      - "9802:8090"
+      
+  mhl-es:
+    hostname: mhl-es
+    container_name: mhl-es
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    environment:
+      - cluster.name=mHealthLab
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - transport.host=0.0.0.0
+      - transport.tcp.port=9300 
+      - http.port=9200
+      - network.host=0.0.0.0
+    depends_on:
+      - "mhl-kafka-zookeeper"
+      - "mhl-kafka-broker0"
+    expose:
+      - "9200"
+    ports:
+      - "9822:9200"
+    volumes:
+      - mhl-es-data:/usr/share/elasticsearch/data
+      
+  mhl-kibana:
+    hostname: mhl-kibana
+    container_name: mhl-kibana
+    image: docker.elastic.co/kibana/kibana:7.10.2
+    environment:
+      ELASTICSEARCH_HOSTS: "http://mhl-es:9200"
+      SERVER_HOST: "0.0.0.0"
+      SERVER_NAME: "mHealthLab"
+    depends_on:
+      - "mhl-es"
+    ports:
+      - "9803:5601"
+      
+  mhl-estap:
+    hostname: mhl-estap
+    container_name: mhl-estap
+    build: 
+      context: ./mhl-services/es-tap
+      dockerfile: Dockerfile
+    depends_on:
+      - "mhl-es"
+      - "mhl-kafka-zookeeper"
+      - "mhl-kafka-broker0"
+            
+  mhl-analytics:
+    hostname: mhl-analytics
+    container_name: mhl-analytics
+    build: 
+      context: ./mhl-services/analytics
+      dockerfile: Dockerfile
+    depends_on:
+      - "mhl-es"
+      - "mhl-kafka-zookeeper"
+      - "mhl-kafka-broker0"
+    ports:
+      - "9804:8888"
+    volumes:
+        - ./notebooks:/notebooks   
+
+volumes:
+    mhl-es-data:
+    mhl-user-manager-data:
+        
+secrets:
+  mhl_ingest_keyStorePassword: 
+      file: ./mhl-secrets/mhl_ingest_keyStorePassword
+  mhl_ingest_serverkeys: 
+      file: ./mhl-secrets/mhl_ingest_serverkeys
+
+    
+
