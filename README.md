@@ -6,11 +6,11 @@ The server is fully containerized using Docker and consists of a combination of 
 
 The server uses a custom data ingestion front end implemented in Java for receiving streaming data from clients connected over the internet and publishing these data to the Kafka bus. This component can also pass messages back to connected clients that are published to the Kafka bus. A second custom component implemented in Java receives messages from the Kafka bus and send them to ElasticSearch for indexing and long term storage. A third custom Java component allows for real-time, low latency visualization of streaming data. Finally, a custom, light-weight Python-based Django web application is used to provide a basic web portal with participant management capabilities.
 
-##Installation
+## Installation
 
 The server components will run on a relatively recent laptop or desktop computer. They have been tested on Intel and M1 Macbook Pros as well as Ubuntu 16 and 18 Linux servers. The client app will run on Android 9 and above.
 
-###Installing the server components
+### Installing the server components
 
 To install the server components, follow these steps.
 
@@ -19,11 +19,11 @@ To install the server components, follow these steps.
 3. Change to the directory mhl-server
 4. Run docker-compose build
 
-###Installing the Android client app
+### Installing the Android client app
 
 From an Android device, click this link to side-load the client app: [https://github.com/reml-lab/mhl-framework/blob/main/mhl-android-apps/mhl-demo.apk](https://github.com/reml-lab/mhl-framework/blob/main/mhl-android-apps/mhl-demo.apk)
 
-##Running the Framework
+## Running the Framework
 
 1. To run the server framework, navigate to the mhl-framework root directory and run: docker-compose up
 2. Find the IP address of the server. 
