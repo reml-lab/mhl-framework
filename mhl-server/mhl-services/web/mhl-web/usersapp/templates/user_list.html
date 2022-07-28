@@ -1,0 +1,48 @@
+{% extends "base_generic.html" %}
+
+
+{% block content %}    
+          
+<h1>Participant List</h1>
+<div style="height: 20px"></div>
+<div class="table-responsive">          
+    <table class="table">
+        <thead>
+        <tr>
+            <td></td> 
+            <td><b>Study Name</b></td>
+            <td><b>Configuration Version</b></td>
+            <td><b>Research Token</b></td>
+            <td><b>Badge ID</b></td>
+            <td><b>Study Start Date</b></td>
+            <td><b>Study End Date</b></td>
+            
+            <td><b>Actions</b></td>        
+        </tr>
+        </thead> 
+        <tbody>   
+        {% for item in object_list %}
+        <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.study_name }}</td>
+            <td>{{ item.config_version }}</td>
+            <td>{{ item.research_token }}</td>
+            <td>{{ item.badge_id }}</td>
+            <td>{{ item.study_start_date }}</td>
+            <td>{{ item.study_end_date }}</td>
+                
+            <td><a href="/user/{{ item.id }}/edit"><span class="material-icons md-dark">mode_edit</span></a>
+            <a href="/user/{{ item.id }}/delete"><span class="material-icons md-dark">delete_forever</span></a>
+            <A  href="/user/{{ item.badge_id }}/vis"><span class="material-icons md-dark">insert_chart</span></a>    
+        </td>  
+        </tr>        
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div align="right" style="margin-top: 20px; margin-bottom: 20px; overflow: hidden; min-height: 100px">  
+    <a href="/user/create" class="btn btn-primary">Add New</a>
+</div> 
+
+{% endblock %}

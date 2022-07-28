@@ -1,0 +1,350 @@
+{% extends "base_generic.html" %}
+
+
+{% block scripts %}
+	<style>
+	.graph {
+	  max-height: 0;
+	  overflow: hidden;
+	  /* transition: max-height 0.6s ease-out; */
+	}
+	</style>
+	
+	
+  	<!-- Plotly.js -->
+   	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  	<script>
+
+	function getParameterByName(name, url) {
+	    if (!url) {
+	      url = window.location.href;
+	    }
+	    name = name.replace(/[\[\]]/g, "\\$&");
+	    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+	        results = regex.exec(url);
+	    if (!results) return null;
+	    if (!results[2]) return '';
+	    return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
+	
+	var ws = new WebSocket("ws://localhost:9802/");
+
+	var USER_ID = "{{ badge_id }}";
+	var MAX_POINTS = getParameterByName('plot_size');
+	if (MAX_POINTS == null || MAX_POINTS == '') {
+		MAX_POINTS = 250;
+	}
+	
+	const TIME_INDEX = 0;
+	var MAP_WIDTH = 10;
+	
+	var d = new Date();
+	var lastMapUpdate = d.getTime();
+
+	var data = {};
+	var plots = {};
+	var divs = {};
+	var max_points = {};
+	
+	var updateLocation = false;
+	
+	//websocket boilerplate
+	ws.onopen = function() {
+	    console.log("Opened!");
+	    ws.send("ID," + USER_ID );
+	};
+	ws.onclose = function() {
+	    console.log("Closed!");
+	};
+	ws.onerror = function(err) {
+	    console.log("Error: " + err);
+	};
+
+	//message ingestion
+	ws.onmessage = function (evt) {
+		var incoming_data = evt.data;		
+		var obj = JSON.parse(incoming_data);
+
+		if (obj.header["message-type"] == "sensor-message") {
+			let sensorType = obj.metadata["sensor-type"];
+			
+			// only update location data when new data comes in, and only every 5 minutes
+			if (sensorType == "gps" && lastMapUpdate > 5 * 60 * 1000) {
+				updateLocation = true;
+			}
+			
+			// if this sensor type hasn't been seen before...
+			if (divs.hasOwnProperty(sensorType)) {
+				sensor_handler(sensorType, obj.payload);
+				
+			} else {
+					
+				console.log("sensor type does not exist");
+					
+				init_plot(sensorType, obj.payload);
+			}
+
+		} else if (obj.header["message-type"] == "analytics-result") {
+			if (obj.metadata["analytics-type"] == "step-detection") {
+				console.log(obj.payload);
+			} else {
+				console.log("unrecognized analytics message: " + obj);
+			}
+		}
+	};
+	
+	function sensor_handler(sensor, payload) {
+		// get incoming vals
+		var vals = payload.vals;
+		
+		// get relevant data array, plot and div
+		var stored_data = data[sensor];
+		var plot = plots[sensor];
+		var div = divs[sensor];
+		
+		// push timestamp and data into appropriate array
+		stored_data[0].push(new Date(payload.t));
+		for (var i = 0; i < vals.length; i++) {
+			var keyset = Object.keys(vals[i]);
+			var index = keyset[0]
+			var incoming_point = vals[i][index]
+			
+			if (incoming_point != undefined) {
+				stored_data[i + 1].push(incoming_point);
+			}
+		}
+		data[sensor] = stored_data
+	}
+	
+	function location_handler(payload) {
+		
+	}
+	
+	function init_plot(sensor, payload) {
+		console.log("creating plot for sensor: " + sensor);
+		
+		var vals = payload.vals;
+		
+		// set max points for sensor (smart setting pending) TODO
+		max_points[sensor] = MAX_POINTS;
+		if (sensor == 'gps') {
+			max_points[sensor] = 1;
+		}
+		
+		// create new data array, populate with timestamp and incoming values
+		var arr = [ [new Date(payload.t)] ];
+		for (var i = 0; i < vals.length; i++) {
+			arr.push( [ Object.values(vals[i])[0] ] );
+		}
+		
+		data[sensor] = arr;
+		
+		// create a new div
+		var div = document.createElement('div');
+		div.id = sensor;
+		div.className = "graph";
+		div.style.width = "90%";
+		//div.style.backgroundColor = '#424242';
+		div.style.boxShadow = "10px 10px 20px #000000";
+				
+		// create the new plot traces
+		var traces = [];
+		var layout = null;
+		
+		let type = 'scatter';
+		if (sensor == 'gps') {
+			type = 'scattermapbox';
+			
+			for (var i = 0; i < vals.length; i++) {
+				var key = Object.keys(vals[i])[0];
+				var trace = {
+					lat: data[sensor][i + 1],
+					lon: data[sensor][i + 2],
+					type: type,
+					name: key,
+					mode:'markers',
+					marker: {
+					  size:20
+					},
+					text:['Current Location']
+				};
+				
+				traces.push(trace);
+			}
+			
+			layout = {
+//				autosize: true,
+				autosize: false,
+				width: MAP_WIDTH,
+				hovermode: 'closest',
+				title: 'location',
+				showlegend: false,
+				mapbox: {
+				  bearing:0,
+				  center: {
+				    lat: Number(data[sensor][1]),
+				    lon: Number(data[sensor][2])
+				  },
+				  pitch:0,
+				  zoom:15,
+				  style: 'dark',
+				},
+				
+				margin: {
+			      r: 0,
+			      t: 20,
+			      b: 10,
+			      l: 0,
+			      pad: 0
+				},
+				paper_bgcolor: '#424242',
+				plot_bgcolor: '#000000', //#191A1A
+				font: {
+				    color: '#ffffff'
+				}
+			}
+			
+			Plotly.setPlotConfig({
+			  mapboxAccessToken: 'pk.eyJ1IjoiZXJpc2luZ2VyIiwiYSI6ImNqb20xanIzMjA5N3ozd3BjdW56dnB3d24ifQ.qynEgH6w4niHAZgfEK5mVg',
+			  responsive: true
+			})
+			
+		} else {
+			for (var i = 0; i < vals.length; i++) {
+				var key = Object.keys(vals[i])[0];
+				var trace = {
+					x: data[sensor][0], 
+					y: data[sensor][i + 1], 
+					type: type,
+					name: key,
+					line: {
+						width: 3
+					}
+				};
+				
+				traces.push(trace);
+			}
+			
+			// create a layout for the plot
+			layout = {
+				title: sensor,
+				autosize: true,
+				paper_bgcolor: '#FFFFFF',
+				plot_bgcolor: '#DDDDDD', //#191A1A
+				font: {
+				    color: '#000000'
+				}
+				
+			};
+		}
+		
+		// create a new plot, add the div, add to dictionary of plots
+		plots[sensor] = Plotly.newPlot(div, traces, layout, {responsive: true});
+		
+		// add new div to the document
+		let core_div = document.getElementById('core_div');
+		core_div.appendChild(document.createElement("br"));
+		core_div.appendChild(div);
+		core_div.appendChild(document.createElement("br"));
+		core_div.style.visibility = "visible";
+		
+//		divs[sensor] = div;
+		div.style.maxHeight = div.scrollHeight + "px";
+		div.style.overflow = 'hidden';
+		
+		let buttons = document.querySelectorAll('[data-title="Autoscale"]');
+		for (var i = 0; i < buttons.length; i++) {
+			buttons[i].click();
+		}
+		
+		divs[sensor] = div;
+	}
+
+	function update_plots() {		
+		var plot = null;
+		var arr = null;
+		var div = null;
+		var points = null;
+		var plot_data = null;
+		var sensors = Object.keys(data);
+		
+//		console.log("sensors: " + sensors.length);
+		
+		for (var i = 0; i < sensors.length; i++) {
+			
+//			console.log("i: " + i);
+			
+			sensor = sensors[i]
+			
+			if (sensor == "gps") {
+				if (!updateLocation) {
+					continue;
+				} else {
+					updateLocation = false;
+					lastMapUpdate = new Date().getTime();
+					
+					console.log("updating map");
+				}
+			}
+			
+//			console.log("updating plot: " + sensor);
+			
+			plot = plots[sensor];
+			arr = data[sensor];
+			div = divs[sensor];
+			points = max_points[sensor];
+			
+			plotdata = div.data;
+			
+			if (arr[0].length > points) {
+				arr = trim_multiaxis_data(arr, points);
+			}
+			
+			data[sensor] = arr;
+			
+			for (var j = 0; j < plotdata.length; j++) {
+				plotdata[j].x = arr[0];
+				plotdata[j].y = arr[j + 1];
+			}
+			
+			Plotly.redraw(div);
+		}
+//		console.log("done updating sensors " + sensors);
+	}
+	
+	function trim_multiaxis_data(trim_data, max_vals) {
+		for (var i = 0; i < trim_data.length; i++) {
+			trim_data[i].splice(0, trim_data[i].length - max_vals);
+		}
+		return trim_data
+	}
+	
+	function trim_single_axis_data(trim_data, max_vals) {
+		trim_data.splice(0, trim_data.length - max_vals);
+	}
+	</script>
+{% endblock %}
+
+
+{% block content %}   
+	
+	<!-- alignment div -->
+		
+		<!-- title div and spacers -->
+		<H1>Participant Visualization: {{badge_id}}</H1>
+		
+		<!-- content div -->
+		<div id="core_div" align="center" style="visibility: hidden; width: 90%; min-height: 100px; overflow: hidden; font-size:36px; font-family: arial; color: black">
+		
+		<!-- spacer -->
+		<div style="height: 10px"></div>
+		
+	
+  	<script>		
+	setInterval(function() {
+		console.log("setInterval called");
+		update_plots();
+	}, 100);
+  	</script>
+{% endblock %}
+

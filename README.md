@@ -21,7 +21,7 @@ To install the server components, follow these steps.
 
 ### Installing the Android client app
 
-From an Android device, click this link to side-load the client app: [https://github.com/reml-lab/mhl-framework/blob/main/mhl-android-apps/mhl-demo.apk](https://github.com/reml-lab/mhl-framework/blob/main/mhl-android-apps/mhl-demo.apk)
+From an Android device, click this link to download and install the client app: https://github.com/reml-lab/mhl-framework/blob/main/mhl-android-apps/mhl-demo.apk?raw=true
 
 ## Running the Framework
 
