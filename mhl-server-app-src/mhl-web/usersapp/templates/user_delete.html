@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+
+{% block content %}    
+<h1>Delete Participant</h1>
+
+<p>Are you sure you want to delete the participant with badge ID <B>{{ object.badge_id }}</B>
+    and research token <B>{{ object.research_token }}</B>?</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input class="btn btn-primary" type="submit" value="Delete">
+  <a href="{{ view.get_success_url }}" class="btn btn-secondary">Cancel</a>
+</form>
+
+{% endblock %}
