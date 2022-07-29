@@ -24,7 +24,7 @@ To install the server components, follow these steps.
 
 From an Android device, click this link to download and install the client app: https://github.com/reml-lab/mhl-framework/blob/main/mhl-android-apps/mhl-demo.apk?raw=true. This client streams a univariate synthetic data stream to the server.
 
-## 1.3 Running and Testing the Framework
+### 1.3 Running and Testing the Framework
 
 Basic usage instructions for testing streaming and inspecting data are provided below. Additional instructions for more advanced use of server components follows.
 
