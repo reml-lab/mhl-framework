@@ -34,17 +34,17 @@ Basic usage instructions for testing streaming and inspecting data are provided 
 4. Enter the IP address of the server. This IP address must be reachable from the Android device.
 5. Enter a valid research token. The server ships with the research token 12345678 pre-configured.
 6. Press the "Start Streaming" button to connect to the server and start streaming data. 
-7. Open a web browser and go to http://<server_ip>:9801 to connect to the web portal. If running the server on the system where the broweser is running, simply click this link: http://localhost:9801.
+7. Open a web browser and go to http://<server_ip>:9801 to connect to the web portal. If running the server on the system where the browser is running, simply click this link: http://localhost:9801.
 8. From the web portal, you can view the streaming data visualization by clicking on the graph icon in the Actions column of the user listing. You can also connect to the Kibana server and the Jupyter Notebook server (more information is provided below).
 9. When finished, click "Stop Streaming" on the Android phone to stop streaming data and run: "docker-compose stop" from the mhl-framework/mhl-server directory on the server to stop the server components.
 
 ## 2. Usage Instructions
 
-### 2.1 Using the Participant Managment Portal
+### 2.1 Using the Participant Management Portal
 
-The participant managment portal includes basic functionality for managing participant records. The participant management portal can be accessed from the web portal at http://<server_ip>:9801. If you are viewing this page from a machine running the server, you can access it using this link: http://localhost:9801.
+The participant management portal includes basic functionality for managing participant records. The participant management portal can be accessed from the web portal at http://<server_ip>:9801. If you are viewing this page from a machine running the server, you can access it using this link: http://localhost:9801.
 
-The existing structure includes several field types. The basic data model includes a participant facing research token and an internal identifier (the Badge ID). All stired streaming data records are associated with the Badge ID. 
+The existing structure includes several field types. The basic data model includes a participant facing research token and an internal identifier (the Badge ID). All stored streaming data records are associated with the Badge ID. 
 
 The portal allows for editing participant records, deleting participant records, adding new participant records, and viewing currently streaming data for each participant (to view streaming data from a currently connected participant, click the chart icon in the Actions column of the participant list). This portal is implemented using Django and can easily be extended by adding more fields to the Django data model.
 
@@ -59,7 +59,7 @@ A base configuration file is also provided at this link: https://raw.githubuserc
 3. Drag and drop a copy of the export.ndjson configuration file onto the file import area.
 4. Click the Import button.
 
-Once these step are compelte, you will have access to a basic dashboard for displaying data streamed from the reference Android application and index patterns enabling the use of Kibana data discovery features.
+Once these step are complete, you will have access to a basic dashboard for displaying data streamed from the reference Android application and index patterns enabling the use of Kibana data discovery features.
 
 ### 2.3 Using Jupyter
 
@@ -75,11 +75,11 @@ The custom server applications written in Java use the Apache Maven build system
 
 The source files for the three applications is included in mhl-framework/mhl-server-app-src directory. The three applications are mhl-ingest (the data ingestion front end), mhl-estap (the Kafka to ElasticSearch bridge application), and mhl-vs (the streaming data visualization server). Each application can be re-compiled using maven by running: "mvn package" in its root folder. 
 
-To deploy updates, the compiled jar file need to be copied back to the corresponding service folder under mhl-framework/mhl-server/mhl-services/<service> and then the corresponding container needs to be rebuilt using "docker-compose build <service_name>". The serivce can then be re-deployed using docker-compose up <service_name>.
+To deploy updates, the compiled jar file need to be copied back to the corresponding service folder under mhl-framework/mhl-server/mhl-services/<service> and then the corresponding container needs to be rebuilt using "docker-compose build <service_name>". The service can then be re-deployed using docker-compose up <service_name>.
 
 #### 3.1.1 mhl-ingest
 
-The mhl-ingest server application is responsible for connecting clients to the mhl-server infrastructure. It executes a handshake operation with connected clients to ensure that the client's research token and badge ID correspond to a known user in the user managment database. This component also pushes a study configuration to the client on a first connection. The class UserManager provides functions for querying the user management database that is maintained by the Django user managment server component. The class MHLIngest implements the handshake operation and is responsible for starting data ingestion threads. The class MHLIngestThread recieves data from a connected client and publishes to the Kafka bus. 
+The mhl-ingest server application is responsible for connecting clients to the mhl-server infrastructure. It executes a handshake operation with connected clients to ensure that the client's research token and badge ID correspond to a known user in the user management database. This component also pushes a study configuration to the client on a first connection. The class UserManager provides functions for querying the user management database that is maintained by the Django user management server component. The class MHLIngest implements the handshake operation and is responsible for starting data ingestion threads. The class MHLIngestThread receives data from a connected client and publishes to the Kafka bus. 
 
 Note that modifications to the Django data model for the user management system require updates to the mhl-ingest code in order to add additional items to the study configuration pushed to the Android application. They also require updates to the Android application to receive and store the updated configuration information.
 
@@ -102,6 +102,14 @@ This component implements basic participant management functions using a Python/
 To deploy changes, copy the contents of the mhl-framework/mhl-server-app-src/mhl-web to mhl-framework/mhl-services/web folder over top of the existing mhl-web folder. Then, rebuild the container using "docker-compose build mhl-web" and redeploy it using "docker-compose up mhl-web." 
 
 Note that the database structure defined in the models.py file is also accessed by the mhl-ingest server component as part of the participant authentication and configuration push process. The mhl-ingest Java application and corresponding Android applications may also require modification to reflect changes to the participant management data model.
+
+#### 3.2.2 Adding Custom Python-Based Data Analytic Services
+
+Adding additional Python-based data analytic services to the mhl-server Docker infrastructure and connecting them to existing data resources is a relatively easy process. To begin, add a new service directory to mhl-framework/mhl-server/mhl-services. A good starting point for the corresponding Dockerfile is the mhl-analytics service. 
+
+This Dockerfile sets up a container including the needed library Kafka and ElasticSearch library versions. The ElasticSearch.ipynb example notebook gives a basic example of how to query data from ElasticSearch data store. This is a suitable approach for analytic tasks that need to run periodically on a window of data. The Kafka-python documentation provides a starting point for developing applications for interacting directly with streaming data via the creation of Kafka consumers and producers. See https://kafka-python.readthedocs.io/en/master/ for details.  
+
+Once the custom application is ready for testing, add it to the mhl-framework/mhl-server/docker-compose.yml file and start it using "docker-compose up". The application will have access to all of the framework resources including ElasticSearch and the Kafka bus.
 
 ### 3.3 Android Applications
 
@@ -127,11 +135,11 @@ The sever and client components use key-based authentication. This repository in
 
 To generate new keys, navigate to the mhl-framework/mhl-key-generator directory, run mhl_key_generator.sh and follow the instructions to generate new keys. Next, follow the instructions below to re-compile study applications and re-build the Docker services system.
 
-### 4.2 Compiling Server Applications
+### 4.2 Re-Compiling Server Applications
 
 The custom server applications use the Apache Maven build system. First install Maven by following the instructions here: https://maven.apache.org/users/index.html. Mac users may find it easier to install Maven using a package manager such as Homebrew (e.g., https://formulae.brew.sh/formula/maven). Next, navigate to the mhl-framework root directory and run build-server.sh. Ensure that there are no build failures before continuing.
 
-### 4.3 Compiling Android Application
+### 4.3 Re-Compiling Android Application
 
 The mhl_key_generator.sh script places updated keys in the resources directory of the reference included reference application, MHLDemo. All that is needed is to re-compile to application. The application was developed using Android Studio Arctic Fox 2020.3.1 Patch 3. We recommend using this version of Android studio to recompile the application. It can be downloaded from the Android Studio download archive here: https://developer.android.com/studio/archive. Using Android Studio, open the mhl-framework/mhl-android-src/mhl-android-demo folder. Once Android Studio has synchronized the project files, the application can be re-compiled. Once the application can been re-compiled, it can be re-deployed to an Android device (with developer option enabled) using Android Studio or the compiled APK can be side loaded. 
 
