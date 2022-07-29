@@ -1,6 +1,6 @@
 # mhl-framework
 
-## 0. Overview
+## Overview
 This repository contains the mHealth Lab streaming data collection framework. The framework includes reference implementations of both data collection server components and an Android client application. 
 
 The server is fully containerized using Docker and consists of a combination of open source and customized components. The server framework uses Apache Kafka to provide a fast and scalable message passing bus. Data storage and retrieval is provided by ElasticSearch. Kibana and Jupyter Notebook are used as off-the-shelf dashboarding and data analytics platforms. 
