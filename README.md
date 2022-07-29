@@ -7,6 +7,8 @@ The server is fully containerized using Docker and consists of a combination of 
 
 The server uses a custom data ingestion front end implemented in Java for receiving streaming data from clients connected over the internet and publishing these data to the Kafka bus. This component can also pass messages back to connected clients that are published to the Kafka bus. A second custom component implemented in Java receives messages from the Kafka bus and send them to ElasticSearch for indexing and long term storage. A third custom Java component allows for real-time, low latency visualization of streaming data. Finally, a custom, light-weight Python-based Django web application is used to provide a basic web portal with participant management capabilities.
 
+![MHL Framework Overview](https://raw.githubusercontent.com/reml-lab/mhl-framework/main/mhl-images/framework-overview.png)
+
 ## 1. Quick Start Guide
 
 The server components will run on a relatively recent laptop or desktop computer. They have been tested on Intel and M1 Macbook Pros as well as Ubuntu 16 and 18 Linux servers. The client app will run on Android 9 and above. The machine where the server is running must be reachable from the network the Android phone is on in order for phone to be able to connect to the server.
