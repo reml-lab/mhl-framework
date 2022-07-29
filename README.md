@@ -9,7 +9,9 @@ The server uses a custom data ingestion front end implemented in Java for receiv
 
 ## 1. Quick Start Guide
 
-The server components will run on a relatively recent laptop or desktop computer. They have been tested on Intel and M1 Macbook Pros as well as Ubuntu 16 and 18 Linux servers. The client app will run on Android 9 and above. The instructions below are suitable for quick setup and testing using a secured machine on a secured network. These instructions should not be followed for deployment on an open network. 
+The server components will run on a relatively recent laptop or desktop computer. They have been tested on Intel and M1 Macbook Pros as well as Ubuntu 16 and 18 Linux servers. The client app will run on Android 9 and above. The machine where the server is running must be reachable from the network the Android phone is on in order for phone to be able to connect to the server.
+
+Please note that the instructions below are suitable for quick setup and testing using a secured machine on a secured network. These instructions should not be followed for deployment on an open network. 
 
 ### 1.1 Installing the server components
 
