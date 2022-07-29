@@ -157,4 +157,4 @@ Once all mhl-framework ports have been closed (except for the data ingestion por
 
 ## 5. Acknowledgements
 
-This work was supported by the National Science Foundation under awards 1722792 and 1823283. It is a joint product of the [Robust and Efficient Machine Learning Lab](https://groups.cs.umass.edu/reml/) in the [College of Information and Computer Sciences](https://www.cics.umass.edu) at the the [University of Massachusetts Amherst](https://www.umass.edu) and the [Mobile Sensor Data to Knowledge Center](https://www.md2k.org). 
+This work was supported by the National Science Foundation under awards 1722792 and 1823283. It is a joint product of the [Robust and Efficient Machine Learning Lab](https://groups.cs.umass.edu/reml/) in the [College of Information and Computer Sciences](https://www.cics.umass.edu) at the the [University of Massachusetts Amherst](https://www.umass.edu) and the [Mobile Sensor Data to Knowledge Center](http://www.md2k.org). 
