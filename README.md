@@ -40,11 +40,13 @@ Basic usage instructions for streaming and inspecting data are provided below. A
 
 ## 3. Usage Instructions
 
-### 3.2 Using the Participant Managment Portal
+### 3.1 Using the Participant Managment Portal
 
-The participant managment portal includes functionality for managing participant records. The existing structure includes several field types. The basic data model includes a participant facing research token and an internal identifier (the Badge ID). All stired streaming data records are associated with the Badge ID. 
+The participant managment portal includes basic functionality for managing participant records. The existing structure includes several field types. The basic data model includes a participant facing research token and an internal identifier (the Badge ID). All stired streaming data records are associated with the Badge ID. 
 
-The portal allows for editing participant records, deleting participant records, adding new participant records, and viewing currently streaming data for each participant.
+The portal allows for editing participant records, deleting participant records, adding new participant records, and viewing currently streaming data for each participant (to view streaming data from a currently connected participant, click the chart icon in the Actions column of the participant list). This portal is implemented using Django and can easily be extended by adding more fields to the Django data model.
+
+The participant management portal can be accessed from the web portal at http://<server_ip>:9801. If you are viewing this page from a machine running the server, you can access it using this link: http://localhost:9801.
 
 ### 3.2 Using Kibana
 
@@ -61,6 +63,6 @@ Once these step are compelte, you will have access to a basic dashboard for disp
 
 ## 3.3 Using Jupyter
 
-The Jupyter server provides a notebook interface for interacting with ElasticSearch and Kafka data using Python. An example notebook is included in ElasticSearch.ipynb that queries the ElasticSearch data store for collected data streamed from the reference Android app. The included Python ElasticSearch library is https://elasticsearch-py.readthedocs.io/en/v7.13.1/. The included Python Kafka library is https://kafka-python.readthedocs.io/en/2.0.1/. 
+The [Jupyter](https://jupyter.org/) server provides a notebook interface for interacting with ElasticSearch and Kafka data using Python. An example notebook is included in ElasticSearch.ipynb that queries the ElasticSearch data store for collected data streamed from the reference Android app. The included Python ElasticSearch library is https://elasticsearch-py.readthedocs.io/en/v7.13.1/. The included Python Kafka library is https://kafka-python.readthedocs.io/en/2.0.1/. 
 
  
