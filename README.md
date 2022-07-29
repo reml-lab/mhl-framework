@@ -103,6 +103,18 @@ To deploy changes, copy the contents of the mhl-framework/mhl-server-app-src/mhl
 
 Note that the database structure defined in the models.py file is also accessed by the mhl-ingest server component as part of the participant authentication and configuration push process. The mhl-ingest Java application and corresponding Android applications may also require modification to reflect changes to the participant management data model.
 
+### 3.3 Android Applications
+
+The reference Android application was developed using Android Studio Arctic Fox 2020.3.1 Patch 3. We recommend using this version of Android studio to modify and recompile the application. Android Studio can be obtained from the Android Studio download archive here: https://developer.android.com/studio/archive. 
+
+Using Android Studio, open the mhl-framework/mhl-android-src/mhl-android-demo folder. Once the project files have synched, you can proceed to inspect the project structure and modify the app. 
+
+The app implements all code needed to connect to the server and stream data in mhl-Library. The demo application shows the basic workflow needed to connect to the server, generate a message, and send the message to the server. 
+
+The app can easily be modified to stream data from Android phone sensors or sensors from wearable devices connected to the phone via Bluetooth. The message type used by the demo app is sensor-synthetic. Additional message types are included in the mhl-Library/MHLClient/Messages folder. 
+
+Note that the server implements a basic authentication mechanism using the research token. On a first connection, the server verifies that the research token is in the user management database and sends a study configuration to the Android client. Updates to the participant management data model need to be reflected in the Android app code to capture additional participant and study configuration variables. These are managed in the mhl-Library/MHLClient/Configuration/IdentityConfig.java and mhl-Library/MHLClient/Configuration/StudyConfig.java files. 
+
 ## 4. Security Limitations
 
 The code in this repository is intended to provide reference implementations of key server and client components needed for streaming data collection and data analytics. The quick start instructions provided above are suitable for initial testing with the included demo app on a secure network with the framework deployed on a local machine such as a laptop or desktop system with active firewall. 
@@ -113,17 +125,17 @@ The security of the deployed system can be increased for limited testing on the 
 
 The sever and client components use key-based authentication. This repository includes an initial set of keys for easy deployment for testing on secured local networks. These keys are used both in the Java server components and the Android client components. Security can be improved by re-generating these keys and recompiling the server and Android client applications.
 
-To generate new keys, navigate to the mhl-framework/mhl-key-generator directory, run mhl_key_generator.sh and follow the instructons to generate new keys. Next, follow the instructions below to re-compile study applications and re-build the Docker services system.
+To generate new keys, navigate to the mhl-framework/mhl-key-generator directory, run mhl_key_generator.sh and follow the instructions to generate new keys. Next, follow the instructions below to re-compile study applications and re-build the Docker services system.
 
-### 4.2 Complining Server Applications
+### 4.2 Compiling Server Applications
 
 The custom server applications use the Apache Maven build system. First install Maven by following the instructions here: https://maven.apache.org/users/index.html. Mac users may find it easier to install Maven using a package manager such as Homebrew (e.g., https://formulae.brew.sh/formula/maven). Next, navigate to the mhl-framework root directory and run build-server.sh. Ensure that there are no build failures before continuing.
 
 ### 4.3 Compiling Android Application
 
-The mhl_key_generator.sh script places updated keys in the resources directory of the reference included reference application, MHLDemo. All that is needed is to re-compile to application. The application was developed using Android Studio Arctic Fox 2020.3.1 Patch 3. We recommendusing this version of Android studio to recompile the application. It can be downloaded from the Android Studio download archive here: https://developer.android.com/studio/archive. Using Android Studio, open the mhl-framework/mhl-android-src/mhl-android-demo folder. Once Android Studio has synchronized the project files, the application can be re-compiled. Once the application can been re-compiled, it can be re-deployed to an Android device (with developer option enabled) using Android Studio or the compiled APK can be side loaded. 
+The mhl_key_generator.sh script places updated keys in the resources directory of the reference included reference application, MHLDemo. All that is needed is to re-compile to application. The application was developed using Android Studio Arctic Fox 2020.3.1 Patch 3. We recommend using this version of Android studio to recompile the application. It can be downloaded from the Android Studio download archive here: https://developer.android.com/studio/archive. Using Android Studio, open the mhl-framework/mhl-android-src/mhl-android-demo folder. Once Android Studio has synchronized the project files, the application can be re-compiled. Once the application can been re-compiled, it can be re-deployed to an Android device (with developer option enabled) using Android Studio or the compiled APK can be side loaded. 
 
-### Securing Server 
+### 4.4 Improving Server Security 
 
 For test deployment with clients connected from the open Internet (as opposed to a secured local network), it is the server framework should be placed on a secured system with only the data ingestion port exposed (port 9400). All other ports used by the framework should be closed to external traffic. The web interfaces on ports 9801, 9802, 9803, and 9804 can then be accessed from the server machine locally or through ssh tunnels. It is also recommended to stop services that are not needed when running test deployments on the open Internet. 
 
