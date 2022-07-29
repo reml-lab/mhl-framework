@@ -152,7 +152,3 @@ For test deployment with clients connected from the open Internet (as opposed to
 All ports used by the framework other than 9400 should be closed to external traffic. Note that special care should be taken with the ElasticSearch database. Ports 9200, 9300, 9803 and 9822 should never be exposed to the open Internet under any circumstances. In addition, the ElasticSearch database is not encrypted at rest by default, so anyone with either physical or SSH access to the machine where the server is running will have unrestricted access to view, download, modify or delete any data stored in ElasticSearch. Refer to to the Elastic.co guide on getting started with ElasticSearch security to configure project-specific security settings.
 
 Once all mhl-framework ports have been closed (except for the data ingestion port, 9400), the web interfaces on ports 9801, 9802, 9803, and 9804 can be accessed from the server locally or through ssh tunnels with key-based security. It is also recommended to stop services that are not needed when running test deployments on the open Internet. Note that the services running on these ports do not have additional authentication layers, so individuals with SSH or physical access to the server running the framework will be able to interact with these services without providing credentials beyond those allowing access to the server. 
-
-
-
-
